@@ -55,7 +55,7 @@ bool sendedRelease;
 	 
         buttonPressed = true;
         sendedRelease = false;
-       NetworkManager.instance.EmitAudioMute();
+       //NetworkManager.instance.EmitAudioMute();
 		if( onPress != null  ){
 
 			onPress(this.gameObject, true);
@@ -72,7 +72,7 @@ bool sendedRelease;
         buttonPressed = false;
         sendedPress = false;
 
-         NetworkManager.instance.EmitAudioMute();
+         //NetworkManager.instance.EmitAudioMute();
 
 		if( onPress != null  ){
 			Debug.Log("OnPointUp");

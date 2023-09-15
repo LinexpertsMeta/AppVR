@@ -151,7 +151,7 @@ namespace MetaverseSample
                 isPlaying = false;
                 StopCoroutine(SendTexture());
                 ResetCamera();
-                NetworkManager.instance.EmitTurnOffCamera();
+                //NetworkManager.instance.EmitTurnOffCamera();
             }
             else
             {
@@ -184,7 +184,7 @@ namespace MetaverseSample
                 colors = _webCamTexture.GetPixels32();
                 texture.SetPixels32(colors);
                 bytesArray = texture.EncodeToJPG();
-                MetaverseSample.NetworkManager.instance.EmitUpdateCamera(bytesArray);
+                //MetaverseSample.NetworkManager.instance.EmitUpdateCamera(bytesArray);
 
                 yield return new WaitForSeconds(0.1f);
             }

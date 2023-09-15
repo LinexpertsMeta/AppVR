@@ -48,8 +48,8 @@ namespace MetaverseSample
         }
         void Start()
         {
-            var uri = new Uri("https://metaverso.linexperts.com:8001");
-
+            var uri = new Uri("http://metaverso.linexperts.com:8002");
+            //var uri = new Uri("https://metaverso.linexperts.com:8001");
             socket = new SocketIOUnity(uri, new SocketIOOptions
             {
                 Query = new Dictionary<string, string>
@@ -104,8 +104,8 @@ namespace MetaverseSample
             };
             socket.OnReconnectAttempt += (sender, e) =>
             {
-                ReceivedText.text = $"{DateTime.Now} Reconnecting: attempt = {e}";
                 Debug.Log($"{DateTime.Now} Reconnecting: attempt = {e}");
+                ReceivedText.text = $"{DateTime.Now} Reconnecting: attempt = {e}";
             };
             ////
 

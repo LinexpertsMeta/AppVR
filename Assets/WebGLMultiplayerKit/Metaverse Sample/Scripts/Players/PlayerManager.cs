@@ -199,8 +199,8 @@ namespace MetaverseSample
                 {
 
 
-                    NetworkManager.instance.EmitAnimation(_animIDSpeed, _animationBlend.ToString(), "float");
-                    NetworkManager.instance.EmitAnimation(_animIDMotionSpeed, inputMagnitude.ToString(), "float");
+                    //NetworkManager.instance.EmitAnimation(_animIDSpeed, _animationBlend.ToString(), "float");
+                    //NetworkManager.instance.EmitAnimation(_animIDMotionSpeed, inputMagnitude.ToString(), "float");
 
 
 
@@ -262,7 +262,7 @@ namespace MetaverseSample
         public void TurnOffCameraMesh()
         {
             webcamGameObject.SetActive(false);
-        }      
+        }
 
 
         public void UpdateCamera(string texture)
@@ -291,7 +291,7 @@ namespace MetaverseSample
             data["rotation"] = transform.rotation.x + ";" + transform.rotation.y + ";" + transform.rotation.z + ";" + transform.rotation.w;
 
 
-            NetworkManager.instance.EmitMoveAndRotate(data);
+            //NetworkManager.instance.EmitMoveAndRotate(data);
 
 
 
@@ -304,7 +304,7 @@ namespace MetaverseSample
             {
                 //if (_input.sitting)
                 //{
-                    NetworkManager.instance.EmitAnimation(_animIDSitting, textState, "bool");
+                //NetworkManager.instance.EmitAnimation(_animIDSitting, textState, "bool");
                 //}
             }
         }
@@ -319,8 +319,8 @@ namespace MetaverseSample
                 // update animator if using character
                 if (_hasAnimator)
                 {
-                    NetworkManager.instance.EmitAnimation(_animIDJump, "false", "bool");
-                    NetworkManager.instance.EmitAnimation(_animIDFreeFall, "false", "bool");
+                    //NetworkManager.instance.EmitAnimation(_animIDJump, "false", "bool");
+                    //NetworkManager.instance.EmitAnimation(_animIDFreeFall, "false", "bool");
                 }
 
 
@@ -329,10 +329,10 @@ namespace MetaverseSample
                 {
 
                     // update animator if using character
-                    if (_hasAnimator &&!hasToUpdateAnimation)
+                    if (_hasAnimator && !hasToUpdateAnimation)
                     {
 
-                        NetworkManager.instance.EmitAnimation(_animIDJump, "true", "bool");
+                        //NetworkManager.instance.EmitAnimation(_animIDJump, "true", "bool");
                     }
                 }
                 // jump timeout
@@ -358,7 +358,7 @@ namespace MetaverseSample
                     // update animator if using character
                     if (_hasAnimator)
                     {
-                        NetworkManager.instance.EmitAnimation(_animIDFreeFall, "true", "bool");
+                        //NetworkManager.instance.EmitAnimation(_animIDFreeFall, "true", "bool");
 
                     }
                 }
@@ -369,7 +369,7 @@ namespace MetaverseSample
             // update animator if using character
             if (_hasAnimator)
             {
-                NetworkManager.instance.EmitAnimation(_animIDGrounded, thirdPersonController.Grounded.ToString(), "bool");
+                //NetworkManager.instance.EmitAnimation(_animIDGrounded, thirdPersonController.Grounded.ToString(), "bool");
             }
         }
 

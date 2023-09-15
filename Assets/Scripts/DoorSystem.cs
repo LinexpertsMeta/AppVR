@@ -32,7 +32,7 @@ namespace MetaverseSample
 
             }
             isOpen = !isOpen;
-            NetworkManager.instance.EmitToggleGameObject(door);
+            //NetworkManager.instance.EmitToggleGameObject(door);
         }
     }
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <!-- Certificados personalizados que confías -->
+            <certificates src="@Android/raw/certificate_cert_out.pem" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

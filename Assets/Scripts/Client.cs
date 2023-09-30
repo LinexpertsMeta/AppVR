@@ -8,11 +8,15 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using TMPro;
 using System.Threading.Tasks;
+using System.Security.Cryptography.X509Certificates;
+using System.Net.Security;
+using System.Net;
 
 namespace MetaverseSample
 {
     public class Client : MonoBehaviour
     {
+        public X509Certificate certificate;
         public static Client instance;
 
         public string local_player_id;
@@ -35,6 +39,9 @@ namespace MetaverseSample
                                               // Start is called before the first frame update
         public GameObject prefab;
 
+        public bool sended;
+        public float currentTime;
+
         private void Awake()
         {
             if (instance == null)
@@ -46,10 +53,52 @@ namespace MetaverseSample
                 Destroy(this);
             }
         }
+
+        private void Update()
+        {
+            if (sended)
+            {
+                currentTime += Time.deltaTime;
+            }
+        }
+
+        public async void RepeatSend()
+        {
+            while (true)
+            {
+                if (!sended && socket.Connected)
+                {
+                    sended = true;
+                    Debug.Log("Sending Ping");
+                    Dictionary<string, string> data = new Dictionary<string, string>();
+
+                    data["msg"] = "ping!!!!";
+                    await socket.EmitAsync("PING", JsonUtility.ToJson(data));
+                    Debug.Log("currentTime: " + currentTime);
+                    currentTime = 0;
+                    sended = false;
+                    Debug.Log("Sending Ping Again");
+                    await Task.Delay(100);
+                }
+            }
+        }
+
+        private static bool IgnoreCertificateValidation(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        {
+            // Devuelve true para ignorar la validación de certificados
+            return true;
+        }
+
         void Start()
         {
-            var uri = new Uri("http://metaverso.linexperts.com:8002");
-            //var uri = new Uri("https://metaverso.linexperts.com:8001");
+
+            ServicePointManager.ServerCertificateValidationCallback = IgnoreCertificateValidation;
+
+
+
+            var uri = new Uri("https://metaverso.linexperts.com:8555/gafas");
+
+
             socket = new SocketIOUnity(uri, new SocketIOOptions
             {
                 Query = new Dictionary<string, string>
@@ -61,15 +110,16 @@ namespace MetaverseSample
                 ,
                 Transport = SocketIOClient.Transport.TransportProtocol.WebSocket,
                 //ConnectionTimeout = new TimeSpan(0,0,0,4),
-                //ReconnectionDelay = 1,
-                //Reconnection = true
-            }); ;
+                ReconnectionDelay = 1,
+                Reconnection = true
+            });
             socket.JsonSerializer = new NewtonsoftJsonSerializer();
 
             ///// reserved socketio events
             socket.OnConnected += (sender, e) =>
             {
                 Debug.Log("socket.OnConnected");
+                //RepeatSend();
                 ReceivedText.text = "socket.OnConnected";
             };
 
@@ -108,13 +158,16 @@ namespace MetaverseSample
                 ReceivedText.text = $"{DateTime.Now} Reconnecting: attempt = {e}";
             };
             ////
-
+            socket.OnError += (sender, e) =>
+            {
+                Debug.Log(sender);
+                Debug.Log(e);
+            };
 
             //ReceivedText.text = "Connecting....";
             Debug.Log("Connecting....");
             socket.Connect();
-            Debug.Log(socket);
-
+            Debug.Log("socket: " + socket);
             Debug.Log("Try connect");
             socket.OnUnityThread("spin", (data) =>
             {
@@ -123,10 +176,11 @@ namespace MetaverseSample
             });
 
             ////ReceivedText.text = "";
-            //socket.OnAnyInUnityThread((name, response) =>
-            //{
-            //    ReceivedText.text += "Received On. " + name + " : " + response.ToString() + "\n";
-            //});
+            socket.OnAnyInUnityThread((name, response) =>
+            {
+                Debug.Log("OnAnyInUnityThread: " + response);
+                ReceivedText.text = "Received On. " + name + " : " + response.ToString() + "\n" + currentTime;
+            });
 
 
 
@@ -164,6 +218,11 @@ namespace MetaverseSample
             {
                 PimDeWitte.UnityMainThreadDispatcher.UnityMainThreadDispatcher.Instance().
                 Enqueue(() => local_player_id = response.GetValue<string>(0));
+            });
+
+            socket.On("UPDATE_USER_LIST", response =>
+            {
+                Debug.Log(response);
             });
         }
 
@@ -304,6 +363,11 @@ namespace MetaverseSample
             string pack = JsonUtility.ToJson(player);
 
             await socket.EmitAsync("MOVE_AND_ROTATE", pack);
+        }
+
+        public async void EmitGetUserList()
+        {
+            await socket.EmitAsync("GET_USERS_LIST");
         }
 
     }
